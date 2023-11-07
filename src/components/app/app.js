@@ -1,22 +1,34 @@
-import React from "react";
+import React, { Component } from "react";
 import TaskList from "../task-list";
 import Header from "../header";
 import Footer from "../footer";
 import "../../../src/index.css";
-const App = () => {
-  const todoData = [
-    { label: "eat", important: false, id: 1 },
-    { label: "drink", important: false, id: 2 },
-    { label: "sleep", important: true, id: 3 },
-  ];
+export default class App extends Component {
+  maxId = 100;
+  state = {
+    todoData: [
+      this.createTodoTask("eat"),
+      this.createTodoTask("drink"),
+      this.createTodoTask("sleep"),
+    ],
+  };
+  createTodoTask(label) {
+    return { label, important: false, id: this.maxId++ };
+  }
+  render() {
+    const { todoData } = this.state;
 
-  return (
-    <div className="todoapp">
-      <Header />
-      <TaskList todos={todoData} />
-      <Footer />
-    </div>
-  );
-};
-
-export default App;
+    const add = (text = "lala") => {
+      const newTask = this.createTodoTask(text);
+      const newState = [...todoData, newTask];
+      this.setState({ todoData: newState });
+    };
+    return (
+      <div className="todoapp">
+        <Header add={add} />
+        <TaskList todoData={todoData} />
+        <Footer />
+      </div>
+    );
+  }
+}
